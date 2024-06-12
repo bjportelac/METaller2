@@ -40,7 +40,7 @@ long zrng[] = {
  * @param num Index into the seed array
  * @return The next pseudorandom number as a double in the range of 0 to 1
  */
-double LCGrand(int num) {
+float LCGrand(int num) {
 
     long zi, lowprd, hi31;
 
@@ -59,7 +59,7 @@ double LCGrand(int num) {
 
     zrng[num] = zi;
 
-    return (zi >> 7 | 1) / 16777216.0;
+    return static_cast<float>((zi >> 7 | 1) / 16777216.0);
 }
 
 
