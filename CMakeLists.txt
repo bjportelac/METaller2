@@ -6,4 +6,4 @@ set(CMAKE_CXX_STANDARD 14)
 add_executable(METaller2
         lcgrand.cpp
         lcgrand.h
-        QueueSimulation.cpp)
+        MM1Simulation.cpp)

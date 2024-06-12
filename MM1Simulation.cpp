@@ -5,31 +5,43 @@
 
 #include "lcgrand.h"
 
-constexpr int QUEUE_LIMIT = 100;
+constexpr int QUEUE_LIMIT = 1000;
 constexpr int BUSY = 1;
 constexpr int IDLE = 0;
+constexpr int SEED_RAND_VAL = 50;
+
+constexpr char PARAMS_ABS_PATH[] = R"(Your\absolute\path\here)";
+constexpr char REPORT_ABS_PATH[] = R"(Your\absolute\path\here)";
+
 
 /**
- * @file QueueSimulation.cpp
- * @brief This file contains the QueueSimulation class which simulates a single-server queueing system.
+ * @file MM1Simulation.cpp
+ * @brief This file contains the MM1Simulation class which simulates a single-server queueing system.
+ *
+ * @copyright A. M. Law, Simulation modeling and analysis. New York, Ny: Mcgraw-Hill Education, 2015.
+ *
+ * This Class implements the M/M/1 Single server system presented by se the Law , which ANSI-standard version of the language, as defined by Kernighan and Ritchie (1988).
+ * This version migrates the C code implementation to a C++ implementation which improves readability and debugging.
+ *
+ * @date June 2024.
  */
 
 /**
- * @class QueueSimulation
- * @brief The QueueSimulation class simulates a single-server queueing system.
+ * @class MM1Simulation
+ * @brief The MM1Simulation class simulates a single-server queueing system.
  *
- * The QueueSimulation class uses a queue to simulate the arrival and departure of customers in a single-server system.
+ * The MM1Simulation class uses a queue to simulate the arrival and departure of customers in a single-server system.
  * The class contains methods to initialize the simulation, handle the arrival and departure of customers, update time-average statistical accumulators, and generate reports.
  */
-class QueueSimulation {
+class MM1Simulation {
 private:
     int nextEventType, numCustomersDelayed,
-        numDelaysRequired, numEvents,
-        numInQueue,serverStatus;
+            numDelaysRequired, numEvents,
+            numInQueue, serverStatus;
 
-    float  areaNumInQueue, areaServerStatus,
-        meanInterArrival, meanService,
-        simulationTime, timeLastEvent, totalOfDelays;
+    float areaNumInQueue, areaServerStatus,
+            meanInterArrival, meanService,
+            simulationTime, timeLastEvent, totalOfDelays;
 
     std::vector<float> timeArrival;
     std::vector<float> timeNextEvent;
@@ -42,7 +54,7 @@ private:
      *
      * This method sets the initial simulation time, server status, number in queue, and time of the last event. It also initializes the statistical counters and the event list.
      */
-    void Initialize(){
+    void Initialize() {
         simulationTime = 0.0;
 
         serverStatus = IDLE;
@@ -63,18 +75,18 @@ private:
      *
      * This method finds the smallest time in the timeNextEvent array and updates the simulation time to this value. If the event list is empty, it prints an error message and terminates the program.
      */
-    void Timing(){
+    void Timing() {
         float MinTimeNextEvent = 1.0e+29;
         nextEventType = 0;
 
-        for (int i = 0; i < numEvents; ++i) {
-            if(timeNextEvent[i] < MinTimeNextEvent){
+        for (int i = 1; i <= numEvents; ++i) {
+            if (timeNextEvent[i] < MinTimeNextEvent) {
                 MinTimeNextEvent = timeNextEvent[i];
                 nextEventType = i;
             }
         }
 
-        if (nextEventType == 0){
+        if (nextEventType == 0) {
             outfileReports << "\nEvent list empty at time: " << simulationTime;
             exit(1);
         }
@@ -87,15 +99,15 @@ private:
      *
      * This method schedules the next arrival event and checks if the server is busy. If the server is busy, it increases the number of customers in the queue. If the server is idle, it schedules the next departure event.
      */
-    void Arrive(){
+    void Arrive() {
         float delay;
 
         timeNextEvent[1] = simulationTime + GetExponential(meanInterArrival);
 
-        if (serverStatus == BUSY){
+        if (serverStatus == BUSY) {
             ++numInQueue;
 
-            if (numInQueue > QUEUE_LIMIT){
+            if (numInQueue > QUEUE_LIMIT) {
                 outfileReports << "Error: Overflow of the rimeArrival vector at: \n";
                 outfileReports << "Time: " << simulationTime << " \n";
                 exit(2);
@@ -118,10 +130,10 @@ private:
      *
      * This method checks if the queue is empty. If the queue is empty, it sets the server status to idle. If the queue is not empty, it decreases the number of customers in the queue, calculates the delay, and schedules the next departure event.
      */
-    void Depart(){
+    void Depart() {
         float delay;
 
-        if (numInQueue == 0){
+        if (numInQueue == 0) {
             serverStatus = IDLE;
             timeNextEvent[2] = 1.0e+30;
         } else {
@@ -133,7 +145,7 @@ private:
             ++numCustomersDelayed;
             timeNextEvent[2] = simulationTime + GetExponential(meanService);
 
-            for (int i = 1; i <= numInQueue ; ++i) {
+            for (int i = 1; i <= numInQueue; ++i) {
                 timeArrival[i] = timeArrival[i + 1];
             }
         }
@@ -144,11 +156,12 @@ private:
      *
      * This method calculates and prints the average delay in the queue, the average number of customers in the queue, the server utilization rate, and the simulation end time.
      */
-    void Report(){
+    void Report() {
         outfileReports << "\n\n";
-        outfileReports << "Average delay in queue: " << (totalOfDelays/static_cast<float>(numCustomersDelayed)) << " minutes. \n";
-        outfileReports << "Average number of clients in queue: " << (areaNumInQueue/simulationTime) << " clients. \n";
-        outfileReports << "Server utilization rate: " << (areaServerStatus/simulationTime) << " . \n";
+        outfileReports << "Average delay in queue: " << (totalOfDelays / static_cast<float>(numCustomersDelayed))
+                       << " minutes. \n";
+        outfileReports << "Average number of clients in queue: " << (areaNumInQueue / simulationTime) << " clients. \n";
+        outfileReports << "Server utilization rate: " << (areaServerStatus / simulationTime) << " . \n";
         outfileReports << "Time simulation ended at: " << simulationTime << " minutes. \n";
     }
 
@@ -157,7 +170,7 @@ private:
      *
      * This method calculates the time since the last event and updates the area under the number-in-queue function and the server-busy indicator function.
      */
-    void UpdateTimeAvgStats(){
+    void UpdateTimeAvgStats() {
         float timeSinceLastEvent = simulationTime - timeLastEvent;
         timeLastEvent = simulationTime;
 
@@ -173,20 +186,33 @@ private:
      * @param mean The mean value for the exponential distribution.
      * @return An exponential random variable.
      */
-    float GetExponential(float mean){
-        return -mean * std::log(LCGrand(1));
+    float GetExponential(float mean) {
+        return -mean * std::log(LCGrand(SEED_RAND_VAL));
+    }
+
+    /**
+     * @brief Closes open resources
+     *
+     */
+    void Cleanup() {
+        if (infileParameters.is_open()) {
+            infileParameters.close();
+        }
+        if (outfileReports.is_open()) {
+            outfileReports.close();
+        }
     }
 
 public:
 
     /**
-     * @brief The QueueSimulation constructor.
+     * @brief The MM1Simulation constructor.
      *
      * This constructor initializes the timeArrival and timeNextEvent vectors.
      */
-    QueueSimulation() : timeArrival(QUEUE_LIMIT + 1), timeNextEvent(3){
-        /*infileParameters.open("params.txt");
-        outfileReports.open("reports.txt");
+    MM1Simulation() : timeArrival(QUEUE_LIMIT + 1), timeNextEvent(3) {
+        infileParameters.open(PARAMS_ABS_PATH);
+        outfileReports.open(REPORT_ABS_PATH);
 
         numEvents = 2;
 
@@ -195,7 +221,8 @@ public:
         outfileReports << "Single-server queueing system (M/M/1 model): \n";
         outfileReports << "Mean inter-Arrival time: " << meanInterArrival << " minutes. \n";
         outfileReports << "Mean service time: " << meanService << " minutes. \n";
-        outfileReports << "Number of customers: " << numDelaysRequired << " customers. \n";*/
+        outfileReports << "Number of customers: " << numDelaysRequired << " customers. \n";
+        outfileReports << "Seed value for reproduction: " << SEED_RAND_VAL << " customers. \n";
     }
 
     /**
@@ -203,10 +230,10 @@ public:
      *
      * This method initializes the simulation, then runs it until the specified number of customers have been delayed. It determines the next event, updates the time-average statistical accumulators, and handles the arrival or departure of customers based on the event type. Finally, it generates reports.
      */
-    void run(){
+    void run() {
         Initialize();
 
-        while(numCustomersDelayed < numDelaysRequired){
+        while (numCustomersDelayed < numDelaysRequired) {
             Timing();
             UpdateTimeAvgStats();
 
@@ -221,47 +248,18 @@ public:
         }
 
         Report();
-        infileParameters.close();
-        outfileReports.close();
+        Cleanup();
     }
 
-    void printFileContents() {
-        std::string line;
-
-        // Print the contents of the input file
-        std::ifstream infile("params.txt");
-        if (infile.is_open()) {
-            std::cout << "Contents of the input file (params.txt):\n";
-            while (getline(infile, line)) {
-                std::cout << line << '\n';
-            }
-            infile.close();
-        } else {
-            std::cout << "Unable to open the input file.\n";
-        }
-
-        // Print the contents of the output file
-        std::ifstream outfile("reports.txt");
-        if (outfile.is_open()) {
-            std::cout << "\nContents of the output file (reports.txt):\n";
-            while (getline(outfile, line)) {
-                std::cout << line << '\n';
-            }
-            outfile.close();
-        } else {
-            std::cout << "Unable to open the output file.\n";
-        }
-    }
 };
 
 int main() {
     try {
-        QueueSimulation simulation;
-        simulation.printFileContents();
-        //simulation.run();
-    } catch (const std::exception& e) {
+        MM1Simulation simulation;
+        simulation.run();
+    } catch (const std::exception &e) {
         std::cerr << "Error: " << e.what() << std::endl;
-        return 1;
+        return 3;
     }
     return 0;
 }
