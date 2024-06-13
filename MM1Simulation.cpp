@@ -2,6 +2,7 @@
 #include <fstream>
 #include <vector>
 #include <cmath>
+#include <iomanip>
 
 #include "lcgrand.h"
 
@@ -20,7 +21,7 @@ constexpr char REPORT_ABS_PATH[] = R"(Your\absolute\path\here)";
  *
  * @copyright A. M. Law, Simulation modeling and analysis. New York, Ny: Mcgraw-Hill Education, 2015.
  *
- * This Class implements the M/M/1 Single server system presented by se the Law , which ANSI-standard version of the language, as defined by Kernighan and Ritchie (1988).
+ * This Class implements the M/M/1 Single server system presented by  Law , which used ANSI-standard version of the language C, as defined by Kernighan and Ritchie (1988).
  * This version migrates the C code implementation to a C++ implementation which improves readability and debugging.
  *
  * @date June 2024.
@@ -158,11 +159,14 @@ private:
      */
     void Report() {
         outfileReports << "\n\n";
-        outfileReports << "Average delay in queue: " << (totalOfDelays / static_cast<float>(numCustomersDelayed))
-                       << " minutes. \n";
-        outfileReports << "Average number of clients in queue: " << (areaNumInQueue / simulationTime) << " clients. \n";
-        outfileReports << "Server utilization rate: " << (areaServerStatus / simulationTime) << " . \n";
-        outfileReports << "Time simulation ended at: " << simulationTime << " minutes. \n";
+        outfileReports << "=============================================\n";
+        outfileReports << "|| Simulation Results\n";
+        outfileReports << "=============================================\n";
+        outfileReports << "|| Average delay in queue: " << std::setw(10) << (totalOfDelays / static_cast<float>(numCustomersDelayed)) << " minutes.\n";
+        outfileReports << "|| Average number of clients in queue: " << std::setw(10) << (areaNumInQueue / simulationTime) << " clients.\n";
+        outfileReports << "|| Server utilization rate: " << std::setw(10) << (areaServerStatus / simulationTime) << " .\n";
+        outfileReports << "|| Time simulation ended at: " << std::setw(10) << simulationTime << " minutes.\n";
+        outfileReports << "=============================================\n";
     }
 
     /**
@@ -218,11 +222,14 @@ public:
 
         infileParameters >> meanInterArrival >> meanService >> numDelaysRequired;
 
-        outfileReports << "Single-server queueing system (M/M/1 model): \n";
-        outfileReports << "Mean inter-Arrival time: " << meanInterArrival << " minutes. \n";
-        outfileReports << "Mean service time: " << meanService << " minutes. \n";
-        outfileReports << "Number of customers: " << numDelaysRequired << " customers. \n";
-        outfileReports << "Seed value for reproduction: " << SEED_RAND_VAL << " customers. \n";
+        outfileReports << "=============================================\n";
+        outfileReports << "|| Single-server queueing system (M/M/1 model)\n";
+        outfileReports << "=============================================\n";
+        outfileReports << "|| Mean inter-Arrival time: " << std::setw(10) << meanInterArrival << " minutes.\n";
+        outfileReports << "|| Mean service time:      " << std::setw(10) << meanService << " minutes.\n";
+        outfileReports << "|| Number of customers:    " << std::setw(10) << numDelaysRequired << " customers.\n";
+        outfileReports << "|| Seed value for reproduction: " << std::setw(10) << SEED_RAND_VAL << "\n";
+        outfileReports << "=============================================\n";
     }
 
     /**
