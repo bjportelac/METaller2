@@ -45,7 +45,6 @@ private:
             meanInterArrival, meanService,
             simulationTime, timeLastEvent, totalOfDelays;
 
-    double erlangBValue, erlangCvalue;
 
     std::vector<float> timeArrival;
     std::vector<float> timeNextEvent;
