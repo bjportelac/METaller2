@@ -45,7 +45,6 @@ private:
             meanInterArrival, meanService,
             simulationTime, timeLastEvent, totalOfDelays;
 
-    double erlangBValue, erlangCvalue;
 
     std::vector<float> timeArrival;
     std::vector<float> timeNextEvent;
@@ -69,8 +68,6 @@ private:
         totalOfDelays = 0.0;
         areaNumInQueue = 0.0;
         areaServerStatus = 0.0;
-        erlangBValue = 0.0;
-        erlangCvalue = 0.0;
 
         timeNextEvent[1] = simulationTime + GetExponential(meanInterArrival);
         timeNextEvent[2] = 1.0e+30;
