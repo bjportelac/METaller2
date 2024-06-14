@@ -5,6 +5,7 @@
 #include <iomanip>
 
 #include "lcgrand.h"
+#include "erlangf.h"
 
 constexpr int QUEUE_LIMIT = 1000;
 constexpr int BUSY = 1;
@@ -44,6 +45,8 @@ private:
             meanInterArrival, meanService,
             simulationTime, timeLastEvent, totalOfDelays;
 
+    double erlangBValue, erlangCvalue;
+
     std::vector<float> timeArrival;
     std::vector<float> timeNextEvent;
 
@@ -66,6 +69,8 @@ private:
         totalOfDelays = 0.0;
         areaNumInQueue = 0.0;
         areaServerStatus = 0.0;
+        erlangBValue = 0.0;
+        erlangCvalue = 0.0;
 
         timeNextEvent[1] = simulationTime + GetExponential(meanInterArrival);
         timeNextEvent[2] = 1.0e+30;
@@ -167,6 +172,11 @@ private:
         outfileReports << "|| Server utilization rate: " << std::setw(10) << (areaServerStatus / simulationTime) << " .\n";
         outfileReports << "|| Time simulation ended at: " << std::setw(10) << simulationTime << " minutes.\n";
         outfileReports << "=============================================\n";
+        outfileReports << "|| Erlang formulas Values: \n";
+        outfileReports << "=============================================\n";
+        outfileReports << "|| Erlang B: " << std::setw(10) << ErlangB(1,meanInterArrival,meanService) << " \n";
+        outfileReports << "|| Erlang C: " << std::setw(10) << ErlangC(1,meanInterArrival,meanService) << " \n";
+        outfileReports << "=============================================\n";
     }
 
     /**
@@ -190,7 +200,7 @@ private:
      * @param mean The mean value for the exponential distribution.
      * @return An exponential random variable.
      */
-    float GetExponential(float mean) {
+    static float GetExponential(float mean) {
         return -mean * std::log(LCGrand(SEED_RAND_VAL));
     }
 
