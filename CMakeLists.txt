@@ -6,7 +6,7 @@ set(CMAKE_CXX_STANDARD 14)
 add_executable(METaller2
         lcgrand.cpp
         lcgrand.h
-        MM1Simulation.cpp
+        SimulacionMM1.cpp
         erlangf.cpp
         erlangf.h
         CustomerData.h)

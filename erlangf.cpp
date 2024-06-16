@@ -1,21 +1,21 @@
 /**
- * @file erlangf.cpp
- * @date 6/14/2024
- * @brief This file contains the implementation of Erlang B and C formulas and a factorial function.
+ * @archivo erlangf.cpp
+ * @fecha 14/06/2024
+ * @brief Este archivo contiene la implementación de fórmulas Erlang B y C y una función factorial.
  */
  
 #include <cmath>
 
 
 /**
- * @brief Calculates the factorial of a number.
+ * @brief Calcula el factorial de un número.
  *
- * This function calculates the factorial of a given number. It uses a double for the result and an int as the iteration variable.
+ * Esta función calcula el factorial de un número dado. Utiliza un double para el resultado y un int como variable de iteración.
+ * Puede usarse con unsigned long long para números más grandes y con unsigned int para la iteracion
  *
- * @param n The number to calculate the factorial of.
- * @return The factorial of the input number.
+ * @param n El número para calcular el factorial.
+ * @return El factorial del número de entrada.
  */
-//Can be moved to used unsigned long for result and unsigned int as iteration variable
 double factorial(int n) {
     double result = 1;
     for (int i = 1; i <= n; ++i) {
@@ -25,51 +25,51 @@ double factorial(int n) {
 }
 
 /**
- * @brief Calculates the Erlang B formula.
+ * @brief Calcula la fórmula de Erlang B.
  *
- * This function calculates the Erlang B formula, which is used to determine the probability of lock,
- * mthis means, the probability that all the lines (servers) are BUSY and a call (arrival) additional will be blocked.
+ * Esta función calcula la fórmula Erlang B, que se utiliza para determinar la probabilidad de bloqueo,
+ * esto significa, la probabilidad de que todas las líneas (servidores) estén OCUPADOS y una llamada (llegada) adicional será bloqueada.
  *
- * @param m The number of servers in the system.
- * @param arrivalRate The rate at which customers arrive to the system.
- * @param serviceRate The rate at which servers can service customers.
- * @return The result of the Erlang B formula.
+ * @param m La cantidad de servidores en el sistema.
+ * @param tasaLlegadas La velocidad a la que llegan los clientes al sistema.
+ * @param tasaServicio La velocidad a la que los servidores pueden atender a los clientes.
+ * @return El resultado de la fórmula Erlang B.
  */
-double ErlangB(int m, double arrivalRate, double serviceRate) {
+double ErlangB(int m, double tasaLlegadas, double tasaServicio) {
 
-    double traffic = arrivalRate * (1 / serviceRate);
+    double trafico = tasaLlegadas * (1 / tasaServicio);
     double lower = 0;
-    double upper = std::pow(traffic, m) / factorial(m);
+    double upper = std::pow(trafico, m) / factorial(m);
 
     for (int i = 0; i <= m; i++) {
-        lower += (std::pow(traffic, i) / factorial(i));
+        lower += (std::pow(trafico, i) / factorial(i));
     }
 
     return upper / lower;
 }
 
 /**
- * @brief Calculates the Erlang C formula.
+ * @brief Calcula la fórmula de Erlang C.
  *
- * This function calculates the Erlang C formula, which is used to determine the probability
- * that a client has to wait in the Queue.
+ * Esta función calcula la fórmula de Erlang C, que se utiliza para determinar la probabilidad
+ * que un cliente tiene que esperar en la cola.
  *
- * @param m The number of servers in the system.
- * @param arrivalRate The rate at which customers arrive to the system.
- * @param serviceRate The rate at which servers can service customers.
- * @return The result of the Erlang C formula.
+ * @param m La cantidad de servidores en el sistema.
+ * @param tasaLlegadas La velocidad a la que llegan los clientes al sistema.
+ * @param tasaServicio La velocidad a la que los servidores pueden atender a los clientes.
+ * @return El resultado de la fórmula Erlang C.
  */
-double ErlangC(int m, double arrivalRate, double serviceRate){
-    double traffic = arrivalRate * (1 / serviceRate);
+double ErlangC(int m, double tasaLlegadas, double tasaServicio){
+    double trafico = tasaLlegadas * (1 / tasaServicio);
     double lower = 0;
-    double upper = std::pow(traffic, m) / factorial(m);
+    double upper = std::pow(trafico, m) / factorial(m);
 
     for (int i = 0; i <= m-1; i++) {
-        double sideA = (std::pow(traffic, i) / factorial(i));
+        double sideA = (std::pow(trafico, i) / factorial(i));
         lower += sideA;
     }
 
-    double sideB = (std::pow(traffic, m) / (factorial(m) * (m - traffic)));
+    double sideB = (std::pow(trafico, m) / (factorial(m) * (m - trafico)));
     lower += sideB;
 
     return upper / lower;

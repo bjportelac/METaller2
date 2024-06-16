@@ -1,16 +1,16 @@
 /**
- * @file lcgrand.cpp
- * @brief Linear Congruential Generator for Pseudorandom Number Generation
- * @author http://www.sju.edu/~sforman/courses/2000F_CSC_5835/ from Simlib.c
+ * @archivo lcgrand.cpp
+ * @brief Generador lineal congruencial para generación de números pseudoaleatorios
+ * @autor http://www.sju.edu/~sforman/courses/2000F_CSC_5835/ de Simlib.c
  * /
 
-/* Constants used in the pseudorandom number generation algorithm */
+/* Constantes utilizadas en el algoritmo de generación de números pseudoaleatorios */
 
-#define MODULUS 2147483647 /**< Upper bound on the range of numbers that can be generated */
-#define MULT1       24112 /**< Multiplier used in the generation of the next random number */
-#define MULT2       26143 /**< Second multiplier used in the generation of the next random number */
+#define MODULUS 2147483647 /**< Límite superior en el rango de números que se pueden generar */
+#define MULT1 24112 /**< Multiplicador utilizado en la generación del siguiente número aleatorio */
+#define MULT2 26143 /**< Segundo multiplicador utilizado en la generación del siguiente número aleatorio */
 
-/* Array of seeds for the first 100 numbers */
+/* Matriz de semillas para los primeros 100 números */
 long zrng[] = {
         1,
         1973272912, 281629770, 20006270, 1280689831, 2096730329, 1933576050,
@@ -33,12 +33,12 @@ long zrng[] = {
 };
 
 /**
- * @brief Generates the next pseudorandom number
+ * @brief Genera el siguiente número pseudoaleatorio
  *
- * This function generates the next pseudorandom number in the sequence using the Linear Congruential Generator algorithm.
+ * Esta función genera el siguiente número pseudoaleatorio en la secuencia usando el algoritmo Generador Lineal Congruencial.
  *
- * @param num Index into the seed array
- * @return The next pseudorandom number as a double in the range of 0 to 1
+ * @param num Índice en la matriz semilla
+ * @return El siguiente número pseudoaleatorio como float en el rango de 0 a 1
  */
 float LCGrand(int num) {
 
@@ -61,8 +61,3 @@ float LCGrand(int num) {
 
     return static_cast<float>((zi >> 7 | 1) / 16777216.0);
 }
-
-
-
-
-

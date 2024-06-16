@@ -5,7 +5,7 @@
 #ifndef METALLER2_ERLANGF_H
 #define METALLER2_ERLANGF_H
 
-double ErlangB(int m, double arrivalRate, double serviceRate);
-double ErlangC(int m, double arrivalRate, double serviceRate);
+double ErlangB(int m, double tasaLlegadas, double tasaServicio);
+double ErlangC(int m, double tasaLlegadas, double tasaServicio);
 
 #endif //METALLER2_ERLANGF_H
