@@ -8,4 +8,5 @@ add_executable(METaller2
         lcgrand.h
         MM1Simulation.cpp
         erlangf.cpp
-        erlangf.h)
+        erlangf.h
+        CustomerData.h)

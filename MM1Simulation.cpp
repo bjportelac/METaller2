@@ -6,14 +6,15 @@
 
 #include "lcgrand.h"
 #include "erlangf.h"
+#include "CustomerData.h"
 
 constexpr int QUEUE_LIMIT = 1000;
 constexpr int BUSY = 1;
 constexpr int IDLE = 0;
 constexpr int SEED_RAND_VAL = 50;
 
-constexpr char PARAMS_ABS_PATH[] = R"(Your\absolute\path\here)";
-constexpr char REPORT_ABS_PATH[] = R"(Your\absolute\path\here)";
+constexpr char PARAMS_ABS_PATH[] = R"(C:\Users\brayan.rolando\Desktop\Caseware\Homework\METaller2\params.txt)";
+constexpr char REPORT_ABS_PATH[] = R"(C:\Users\brayan.rolando\Desktop\Caseware\Homework\METaller2\reports.txt)";
 
 
 /**
@@ -48,6 +49,8 @@ private:
 
     std::vector<float> timeArrival;
     std::vector<float> timeNextEvent;
+
+    std::vector<CustomerData> customersData;
 
     std::ifstream infileParameters;
     std::ofstream outfileReports;
@@ -174,6 +177,18 @@ private:
         outfileReports << "|| Erlang B: " << std::setw(10) << ErlangB(1,meanInterArrival,meanService) << " \n";
         outfileReports << "|| Erlang C: " << std::setw(10) << ErlangC(1,meanInterArrival,meanService) << " \n";
         outfileReports << "=============================================\n";
+
+        outfileReports << "\n\n";
+        outfileReports << "=============================================\n";
+        outfileReports << "|| Clients reports\n";
+        outfileReports << "=============================================\n";
+        outfileReports << "ID,Time Difference,Attention Time\n";
+
+        // Iterate over the customersData vector and write each CustomerData to the outfileReports
+        for (const auto& customerData : customersData) {
+            outfileReports << customerData.id << " , " << customerData.timeDifference << " , " << customerData.attentionTime << " \n";
+        }
+
     }
 
     /**
