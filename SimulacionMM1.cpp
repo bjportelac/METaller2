@@ -11,7 +11,7 @@
 constexpr int LIMITE_COLA = 2000;
 constexpr int OCUPADO = 1;
 constexpr int LIBRE = 0;
-constexpr int VAL_ALE_SEMILLA = 1;
+int VAL_ALE_SEMILLA = 0;
 
 constexpr char PARAMS_ABS_PATH[] = R"(..\params.txt)";
 constexpr char REPORT_ABS_PATH[] = R"(..\results.txt)";
@@ -252,7 +252,7 @@ public:
 
         numEventos = 2;
 
-        parametros >> mediaEntreLlegadas >> mediaServicio >> numEsperasRequerido;
+        parametros >> mediaEntreLlegadas >> mediaServicio >> numEsperasRequerido >> VAL_ALE_SEMILLA;
 
         resultados << "=============================================\n";
         resultados << "|| Modelo de Colas Servidor Unico (Modelo M/M/1)\n";
