@@ -13,8 +13,8 @@ constexpr int OCUPADO = 1;
 constexpr int LIBRE = 0;
 constexpr int VAL_ALE_SEMILLA = 1;
 
-constexpr char PARAMS_ABS_PATH[] = R"(path/absoluto/aqui)";
-constexpr char REPORT_ABS_PATH[] = R"(path/absoluto/aqui)";
+constexpr char PARAMS_ABS_PATH[] = R"(..\params.txt)";
+constexpr char REPORT_ABS_PATH[] = R"(..\results.txt)";
 
 
 /**
